@@ -4046,6 +4046,55 @@ void Corpse::CastRezz(uint16 spellid, Mob* Caster)
 	safe_delete(outapp);
 }
 
+// Custom MP
+double Mob::MPGetCombatFrenzyIncrease() {
+	if (FindBuff(42603)) {
+		return 0.1;
+	}
+	if (FindBuff(42604)) {
+		return 0.5;
+	}
+	if (FindBuff(42605)) {
+		return 1;
+	}
+	if (FindBuff(42606)) {
+		return 3;
+	}
+	if (FindBuff(42607)) {
+		return 5;
+	}
+	return 0.0;
+}
+
+void Mob::MPProcCombatFrenzy() {
+	if (FindBuff(42603)) {
+		BuffFadeBySpellID(42603);
+		CastSpell(42604, 0, CastingSlot::Item, 0);
+		return;
+	}
+	if (FindBuff(42604)) {
+		BuffFadeBySpellID(42604);
+		CastSpell(42605, 0, CastingSlot::Item, 0);
+		return;
+	}
+	if (FindBuff(42605)) {
+		BuffFadeBySpellID(42605);
+		CastSpell(42606, 0, CastingSlot::Item, 0);
+		return;
+	}
+	if (FindBuff(42606)) {
+		BuffFadeBySpellID(42606);
+		CastSpell(42607, 0, CastingSlot::Item, 0);
+		return;
+	}
+	if (FindBuff(42607)) {
+		CastSpell(42607, 0, CastingSlot::Item, 0);
+		return;
+	}
+	CastSpell(42603, 0, CastingSlot::Item, 0);
+}
+// end Custom MP
+
 bool Mob::FindBuff(uint16 spellid)
 {
 	int i;
@@ -4672,6 +4721,14 @@ float Mob::ResistSpell(uint8 resist_type, uint16 spell_id, Mob *caster, bool use
 		float min_charmbreakchance = ((100.0f/static_cast<float>(RuleI(Spells, CharmBreakCheckChance)))/66.0f * 100.0f)*2.0f;
 		if (resist_chance < static_cast<int>(min_charmbreakchance))
 			resist_chance = min_charmbreakchance;
+
+		// Custom MP - never break on NPC, always break on client
+		if (caster->IsClient()) {
+			return 100;
+		}
+		else {
+			return 0;
+		}
 	}
 
 	//Average root duration agianst mobs with 0% chance to resist on LIVE is ~ 22 ticks (6% resist chance).
@@ -4682,6 +4739,14 @@ float Mob::ResistSpell(uint8 resist_type, uint16 spell_id, Mob *caster, bool use
 
 		if (resist_chance < static_cast<int>(min_rootbreakchance))
 			resist_chance = min_rootbreakchance;
+
+		// Custom MP - never break on NPC, always break on client
+		if (caster->IsClient()) {
+			return 100;
+		}
+		else {
+			return 0;
+		}
 	}
 
 	//Finally our roll
@@ -4804,6 +4869,10 @@ int16 Mob::CalcFearResistChance()
 	}
 	if(spellbonuses.Fearless == true || itembonuses.Fearless == true)
 		resistchance = 100;
+
+	// Custom MP increase fear resist chance
+	if (this->IsClient())
+		resistchance = std::min(resistchance, 50);
 
 	return resistchance;
 }

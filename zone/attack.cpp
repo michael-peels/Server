@@ -1355,6 +1355,50 @@ void Mob::DoAttack(Mob *other, DamageHitInfo &hit, ExtraAttackOptions *opts)
 			if (hit.damage_done > 0) {
 				ApplyDamageTable(hit);
 				CommonOutgoingHitSuccess(other, hit, opts);
+
+				// Custom MP - add dmg from Str/Dex on player or bot hit
+				double totalPctIncrease = 0.0;
+				if (IsClient() || IsBot()) {
+					totalPctIncrease = MPCalcPctBonus(GetSTR()) + MPCalcPctBonus(GetDEX());
+
+					// Check for Combat Frenzy buff on user / bot
+					totalPctIncrease += MPGetCombatFrenzyIncrease();
+
+					// Check if Combat Frenzy should proc
+					if ((rand() % 100 + 1) > 95) {
+						// MPProcCombatFrenzy();
+					}
+
+				}
+				// if is bot / client's pet, add dmg based on owner charisma
+				else if (IsPet() && (IsPetOwnerClient() || GetOwner()->IsBot())) {
+					double totalPctIncrease = MPCalcPctBonus(GetOwner()->GetCHA() + 25);
+				}
+
+				if (totalPctIncrease > 0) {
+					LogCombat("Total pct increase: [{}]", totalPctIncrease);
+					LogCombat("Orig dmg done: [{}]", hit.damage_done);
+					hit.damage_done += hit.damage_done * totalPctIncrease;
+					LogCombat("Post increase dmg done: [{}]", hit.damage_done);
+				}
+
+				// if other is client/bot/pet, reduce damage based on stam and agi by f(x) = x/ x + a. This allows x to approach 1 but never reach it
+				double totalReduction = 0.0;
+				if (other->IsClient() || other->IsBot()) {
+					totalReduction = (std::max(other->GetSTA() - 100, 0) + std::max(other->GetAGI() - 100, 0));
+				}
+				else if (other->IsPet() && (other->IsPetOwnerClient() || other->GetOwner()->IsBot())) {
+					totalReduction = std::max(other->GetOwner()->GetCHA() - 75, 0);
+				}
+				if (totalReduction > 0) {
+					double reductionPct = totalReduction / (totalReduction + (175 - totalReduction / 3));
+					LogCombat("Reduction percent: [{}]", reductionPct);
+					LogCombat("Orig dmg: [{}]", hit.damage_done);
+					hit.damage_done -= hit.damage_done * reductionPct;
+					LogCombat("Post reduction dmg: [{}]", hit.damage_done);
+				}
+				// END CUSTOM MP
+
 			}
 			LogCombat("Final damage after all reductions: [{}]", hit.damage_done);
 		}

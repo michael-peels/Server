@@ -164,6 +164,14 @@ public:
 		uint16 in_usemodel,
 		bool in_always_aggros_foes
 	);
+
+	// Custom MP
+	double MPCalcPctBonus(int32 stat);
+	int32 MPCalcSpellDamageWithBonus(int32 spellDmg, Mob* target, uint16 spell_id);
+	double MPGetCombatFrenzyIncrease();
+	void MPProcCombatFrenzy();
+	// end Custom MP
+
 	virtual ~Mob();
 
 	inline virtual bool IsMob() const { return true; }

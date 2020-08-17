@@ -6713,7 +6713,9 @@ int32 Bot::CheckHealAggroAmount(uint16 spellid, Mob *target, uint32 heal_possibl
 	int32 AggroAmount = Mob::CheckHealAggroAmount(spellid, target, heal_possible);
 	int32 focusAggro = GetBotFocusEffect(focusSpellHateMod, spellid);
 	AggroAmount = (AggroAmount * (100 + focusAggro) / 100);
-	return AggroAmount;
+	// CUSTOM MP -- no bot healing aggro
+	// return AggroAmount;
+	return 0;
 }
 
 void Bot::MakePet(uint16 spell_id, const char* pettype, const char *petname) {
@@ -7050,6 +7052,9 @@ int32 Bot::GetActSpellDamage(uint16 spell_id, int32 value, Mob* target) {
 	if(itembonuses.SpellDmg && spells[spell_id].classes[(GetClass() % 17) - 1] >= GetLevel() - 5)
 		value += GetExtraSpellAmt(spell_id, itembonuses.SpellDmg, value);
 
+	// CUSTOM MP
+	value = MPCalcSpellDamageWithBonus(value, target, spell_id);
+
 	return value;
  }
 
@@ -7097,6 +7102,9 @@ int32 Bot::GetActSpellHealing(uint16 spell_id, int32 value, Mob* target) {
 		if(chance && (zone->random.Int(0,99) < chance))
 			return (value * 2);
 	}
+
+	// Custom MP
+	value = MPCalcSpellDamageWithBonus(value, target, spell_id);
 	return value;
 }
 

@@ -466,6 +466,14 @@ Mob::Mob(
 	mob_scan_close.Trigger();
 }
 
+// Custom MP
+double Mob::MPCalcPctBonus(int32 stat) {
+	double bonusPct = std::max(stat - 90, 0) / 100.0;
+	LogCombat("Calculated bonus damage pct of [{}]", bonusPct);
+	return bonusPct;
+}
+// end Custom MP
+
 Mob::~Mob()
 {
 	mMovementManager->RemoveMob(this);

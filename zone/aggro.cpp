@@ -1005,6 +1005,8 @@ int32 Mob::CheckAggroAmount(uint16 spell_id, Mob *target, bool isproc)
 				int val = CalcSpellEffectValue_formula(spells[spell_id].formula[o], spells[spell_id].base[o], spells[spell_id].max[o], slevel, spell_id);
 				if (val < 100)
 					AggroAmount += default_aggro;
+				// CUSTOM MP - no threat from slow spells
+				AggroAmount = 0;
 				break;
 			}
 			case SE_Stun:

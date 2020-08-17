@@ -6009,7 +6009,10 @@ void bot_subcommand_bot_spawn(Client *c, const Seperator *sep)
 	int spawned_bot_count = Bot::SpawnedBotCount(c->CharacterID());
 
 	int rule_limit = RuleI(Bots, SpawnLimit);
-	if (spawned_bot_count >= rule_limit && !c->GetGM()) {
+
+	// Custom MP -- start with 1 bot spawnable, another bot for every 10 levels. max 5
+	rule_limit = std::min(5, (c->GetLevel() / 10) + 1);
+	if (spawned_bot_count >= rule_limit) {
 		c->Message(m_fail, "You can not have more than %i spawned bots", rule_limit);
 		return;
 	}
