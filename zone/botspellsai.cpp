@@ -1123,7 +1123,9 @@ bool Bot::AIDoSpellCast(uint8 i, Mob* tar, int32 mana_cost, uint32* oDontDoAgain
 			SetSpellRecastTimer(spells[AIspells[i].spellid].EndurTimerIndex, spells[AIspells[i].spellid].recast_time);
 		}
 	}
-
+	if (manaCost < hasMana) {
+		BotGroupSay(this, "Casting spell: %s.", spells[AIspells[i].spellid].name);
+	}
 	return result;
 }
 

@@ -469,6 +469,15 @@ Mob::Mob(
 // Custom MP
 double Mob::MPCalcPctBonus(int32 stat) {
 	double bonusPct = std::max(stat - 90, 0) / 100.0;
+	if (GetClass() == BARD) {
+		bonusPct = bonusPct * 4;
+	}
+	else if (GetClass() == PALADIN) {
+		bonusPct = bonusPct * 2.5;
+	}
+	else if (GetClass() == SHADOWKNIGHT) {
+		bonusPct = bonusPct * 1.5;
+	}
 	LogCombat("Calculated bonus damage pct of [{}]", bonusPct);
 	return bonusPct;
 }

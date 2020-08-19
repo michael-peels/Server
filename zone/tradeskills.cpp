@@ -1165,7 +1165,7 @@ void Client::CheckIncreaseTradeskill(int16 bonusstat, int16 stat_modifier, float
 	//In stage2 the only thing that matters is your current unmodified skill.
 	//If you want to customize here you probbably need to implement your own
 	//formula instead of tweaking the below one.
-	if (chance_stage1 > zone->random.Real(0, 99)) {
+	if (chance_stage1 > zone->random.Real(0, 70)) {
 		if (current_raw_skill < 15) {
 			//Always succeed
 			chance_stage2 = 100;
@@ -1180,9 +1180,16 @@ void Client::CheckIncreaseTradeskill(int16 bonusstat, int16 stat_modifier, float
 
 	chance_stage2 = mod_tradeskill_skillup(chance_stage2);
 
-	if (chance_stage2 > zone->random.Real(0, 99)) {
+	// CUSTOM MP increased chance for skill up, skills go up by 5
+	if (chance_stage2 > zone->random.Real(0, 70)) {
 		//Only if stage1 and stage2 succeeded you get a skillup.
-		SetSkill(tradeskill, current_raw_skill + 1);
+		if (current_raw_skill < 195) {
+			SetSkill(tradeskill, current_raw_skill + 5);
+		}
+		else {
+			SetSkill(tradeskill, current_raw_skill + 1);
+		}
+		
 
 		if(title_manager.IsNewTradeSkillTitleAvailable(tradeskill, current_raw_skill + 1))
 			NotifyNewTitlesAvailable();

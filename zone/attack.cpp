@@ -3772,6 +3772,12 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 					attacker->CastToClient()->QueuePacket(outapp, true, CLIENT_CONNECTED, filter);
 				}
 			}
+			
+			// CUSTOM MP attacker is bot, broadcast its damage (maybe?)
+			if (attacker && attacker->IsBot() && !FromDamageShield && spell_id != SPELL_UNKNOWN && damage != 0) {
+				char val1[20] = { 0 };
+				attacker->GetOwner()->MessageString(Chat::Spells, HIT_NON_MELEE,attacker->GetName(), GetCleanName(), ConvertArray(damage, val1));
+			}
 			skip = attacker;
 		}
 

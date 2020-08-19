@@ -2450,7 +2450,8 @@ bool Client::CheckIncreaseSkill(EQ::skills::SkillType skillid, Mob *against_who,
 		if(Chance < 1)
 			Chance = 50; // Make it always possible -- CUSTOM MP, was 1
 
-		if(zone->random.Real(0, 99) < Chance)
+		// CUSTOM MP increased chance for wep skill up
+		if(zone->random.Real(0, 70) < Chance)
 		{
 			SetSkill(skillid, GetRawSkill(skillid) + 1);
 			LogSkills("Skill [{}] at value [{}] successfully gain with [{}]% chance (mod [{}])", skillid, skillval, Chance, chancemodi);

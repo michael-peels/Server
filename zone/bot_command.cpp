@@ -3253,6 +3253,7 @@ void bot_command_follow(Client *c, const Seperator *sep)
 	sbl.remove(nullptr);
 	for (auto bot_iter : sbl) {
 		bot_iter->WipeHateList();
+		bot_iter->SetGuardFlag(false);
 		auto my_group = bot_iter->GetGroup();
 		if (my_group) {
 			if (reset) {
@@ -5987,11 +5988,11 @@ void bot_subcommand_bot_report(Client *c, const Seperator *sep)
 }
 
 void bot_subcommand_bot_spawn(Client *c, const Seperator *sep)
-{
+{	
 	if (helper_command_alias_fail(c, "bot_subcommand_bot_spawn", sep->arg[0], "botspawn"))
 		return;
 	if (helper_is_help_or_usage(sep->arg[1])) {
-		c->Message(m_usage, "usage: %s [bot_name]", sep->arg[0]);
+		c->Message(m_usage, "Usage: %s [bot_name]", sep->arg[0]);
 		return;
 	}
 
@@ -6008,16 +6009,16 @@ void bot_subcommand_bot_spawn(Client *c, const Seperator *sep)
 
 	int spawned_bot_count = Bot::SpawnedBotCount(c->CharacterID());
 
-	int rule_limit = RuleI(Bots, SpawnLimit);
-
 	// Custom MP -- start with 1 bot spawnable, another bot for every 10 levels. max 5
-	rule_limit = std::min(5, (c->GetLevel() / 10) + 1);
+	int rule_limit = std::min(5, (c->GetLevel() / 10) + 1);
+	
+
 	if (spawned_bot_count >= rule_limit) {
 		c->Message(m_fail, "You can not have more than %i spawned bots", rule_limit);
 		return;
 	}
 
-	if (RuleB(Bots, QuestableSpawnLimit) && !c->GetGM()) {
+	if (RuleB(Bots, QuestableSpawnLimit)) {
 		int allowed_bot_count = 0;
 		if (!database.botdb.LoadQuestableSpawnCount(c->CharacterID(), allowed_bot_count)) {
 			c->Message(m_fail, "%s", BotDatabase::fail::LoadQuestableSpawnCount());
@@ -6484,7 +6485,7 @@ void bot_subcommand_bot_update(Client *c, const Seperator *sep)
 	if (helper_command_alias_fail(c, "bot_subcommand_bot_update", sep->arg[0], "botupdate"))
 		return;
 	if (helper_is_help_or_usage(sep->arg[1])) {
-		c->Message(m_usage, "usage: %s", sep->arg[0]);
+		c->Message(m_usage, "Usage: %s", sep->arg[0]);
 		return;
 	}
 
