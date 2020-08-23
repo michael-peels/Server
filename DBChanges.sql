@@ -1,3 +1,6 @@
+-- Everything is tradeable
+UPDATE items SET nodrop = 1 WHERE nodrop = 0;
+
 -- Remove defiant drops
 UPDATE lootdrop_entries ld JOIN items i ON i.id =ld.item_id JOIN loottable_entries lt ON ld.lootdrop_id = lt.lootdrop_id SET ld.disabled_chance = ld.chance, ld.chance = 0  WHERE i.Name LIKE '%crude defiant%';
 UPDATE lootdrop_entries ld JOIN items i ON i.id =ld.item_id JOIN loottable_entries lt ON ld.lootdrop_id = lt.lootdrop_id SET ld.disabled_chance = ld.chance, ld.chance = 0  WHERE i.Name LIKE '%simple defiant%';
@@ -8,7 +11,7 @@ UPDATE lootdrop_entries ld JOIN items i ON i.id =ld.item_id JOIN loottable_entri
 UPDATE lootdrop_entries ld JOIN items i ON i.id =ld.item_id JOIN loottable_entries lt ON ld.lootdrop_id = lt.lootdrop_id SET ld.disabled_chance = ld.chance, ld.chance = 0  WHERE i.Name LIKE '%elaborate defiant%';
 UPDATE lootdrop_entries ld JOIN items i ON i.id =ld.item_id JOIN loottable_entries lt ON ld.lootdrop_id = lt.lootdrop_id SET ld.disabled_chance = ld.chance, ld.chance = 0  WHERE i.Name LIKE '%simple combatant%';
 UPDATE lootdrop_entries ld JOIN items i ON i.id =ld.item_id JOIN loottable_entries lt ON ld.lootdrop_id = lt.lootdrop_id SET ld.disabled_chance = ld.chance, ld.chance = 0  WHERE i.Name LIKE '%simple adept%';
-
+UPDATE lootdrop_entries ld JOIN items i ON i.id =ld.item_id JOIN loottable_entries lt ON ld.lootdrop_id = lt.lootdrop_id SET ld.disabled_chance = ld.chance, ld.chance = 0  WHERE i.Name LIKE '%rough adept%';
 
 
 -- Max respawn time of 30 minutes

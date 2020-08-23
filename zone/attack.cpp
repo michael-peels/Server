@@ -1370,8 +1370,9 @@ void Mob::DoAttack(Mob *other, DamageHitInfo &hit, ExtraAttackOptions *opts)
 					}
 
 				}
+				
 				// if is bot / client's pet, add dmg based on owner charisma
-				else if (IsPet() && (IsPetOwnerClient() || GetOwner()->IsBot())) {
+				else if ((IsPet() || IsCharmed()) && (GetOwner()->IsClient() || GetOwner()->IsBot())) {
 					double totalPctIncrease = MPCalcPctBonus(GetOwner()->GetCHA() + 25);
 				}
 
@@ -3774,7 +3775,7 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 			}
 			
 			// CUSTOM MP attacker is bot, broadcast its damage (maybe?)
-			if (attacker && attacker->IsBot() && !FromDamageShield && spell_id != SPELL_UNKNOWN && damage != 0) {
+			if (attacker && attacker->IsBot() && !FromDamageShield && spell_id != SPELL_UNKNOWN) {
 				char val1[20] = { 0 };
 				attacker->GetOwner()->MessageString(Chat::Spells, HIT_NON_MELEE,attacker->GetName(), GetCleanName(), ConvertArray(damage, val1));
 			}

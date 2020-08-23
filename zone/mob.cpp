@@ -470,7 +470,7 @@ Mob::Mob(
 double Mob::MPCalcPctBonus(int32 stat) {
 	double bonusPct = std::max(stat - 90, 0) / 100.0;
 	if (GetClass() == BARD) {
-		bonusPct = bonusPct * 4;
+		bonusPct = bonusPct * 3.5;
 	}
 	else if (GetClass() == PALADIN) {
 		bonusPct = bonusPct * 2.5;
