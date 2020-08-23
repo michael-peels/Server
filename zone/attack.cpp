@@ -1373,7 +1373,7 @@ void Mob::DoAttack(Mob *other, DamageHitInfo &hit, ExtraAttackOptions *opts)
 				
 				// if is bot / client's pet, add dmg based on owner charisma
 				else if ((IsPet() || IsCharmed()) && (GetOwner()->IsClient() || GetOwner()->IsBot())) {
-					double totalPctIncrease = MPCalcPctBonus(GetOwner()->GetCHA() + 25);
+					totalPctIncrease = MPCalcPctBonus(GetOwner()->GetCHA() + 25);
 				}
 
 				if (totalPctIncrease > 0) {
