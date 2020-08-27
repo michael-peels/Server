@@ -375,8 +375,8 @@ int32 Mob::GetActSpellHealing(uint16 spell_id, int32 value, Mob* target) {
 			if (IsClient())
 				MessageString(Chat::SpellCrit, YOU_CRIT_HEAL, itoa(value));
 		}
-
-		return value;
+		// Custom MP
+		return MPCalcSpellDamageWithBonus(value, target, spell_id);
 	}
 
 	//Heal over time spells. [Heal Rate and Additional Healing effects do not increase this value]
