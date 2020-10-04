@@ -167,18 +167,24 @@ int32 Mob::MPCalcSpellDamageWithBonus(int32 spellDmg, Mob* target, uint16 spell_
 	double totalPctIncrease = 0.0;
 	// bonus dmg based on int / wis
 	if ((IsClient() || IsBot()) && (!target->IsClient() || !target->IsBot())) {
-		totalPctIncrease = MPCalcPctBonus(GetINT()) + MPCalcPctBonus(GetWIS());
+		if (GetClass() == BARD) {
+			totalPctIncrease = MPCalcPctBonus(GetCHA()) * 1.5;
+		}
+		else {
+			totalPctIncrease = MPCalcPctBonus(GetINT()) + MPCalcPctBonus(GetWIS());
+		}
+		totalPctIncrease += MPGetCombatFrenzyIncrease(target);
 	}
 	// if is bot / client's pet, add dmg based on owner charisma
 	else if (IsPet() && (IsPetOwnerClient() || GetOwner()->IsBot())) {
 		double totalPctIncrease = MPCalcPctBonus(GetOwner()->GetCHA());
 
-		// Check for Combat Frenzy buff on user / bot
-		totalPctIncrease += MPGetCombatFrenzyIncrease();
+		// Check for Combat Frenzy buff on target
+		totalPctIncrease += MPGetCombatFrenzyIncrease(target);
 
 		// Check if Combat Frenzy should proc
 		if ((rand() % 100 + 1) > 80) {
-			MPProcCombatFrenzy();
+			MPProcCombatFrenzy(target);
 		}
 	}
 	if (totalPctIncrease > 0) {
@@ -188,7 +194,7 @@ int32 Mob::MPCalcSpellDamageWithBonus(int32 spellDmg, Mob* target, uint16 spell_
 		LogCombat("Post increase spell dmg done: [{}]", spellDmg);
 	}
 	// Reduce damage based on resists
-	if (target->IsClient() || target->IsBot() || (target->IsPet() && (target->IsPetOwnerClient() || target->GetOwner()->IsBot()))) {
+	if (!BeneficialSpell(spell_id) && (target->IsClient() || target->IsBot() || (target->IsPet() && (target->IsPetOwnerClient() || target->GetOwner()->IsBot())))) {
 		double totalReduction = 0.0;
 		switch (GetSpellResistType(spell_id)) {
 		case RESIST_MAGIC:

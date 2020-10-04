@@ -168,8 +168,8 @@ public:
 	// Custom MP
 	double MPCalcPctBonus(int32 stat);
 	int32 MPCalcSpellDamageWithBonus(int32 spellDmg, Mob* target, uint16 spell_id);
-	double MPGetCombatFrenzyIncrease();
-	void MPProcCombatFrenzy();
+	double MPGetCombatFrenzyIncrease(Mob * other);
+	void MPProcCombatFrenzy(Mob * other);
 	// end Custom MP
 
 	virtual ~Mob();

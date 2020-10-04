@@ -1362,11 +1362,11 @@ void Mob::DoAttack(Mob *other, DamageHitInfo &hit, ExtraAttackOptions *opts)
 					totalPctIncrease = MPCalcPctBonus(GetSTR()) + MPCalcPctBonus(GetDEX());
 
 					// Check for Combat Frenzy buff on user / bot
-					totalPctIncrease += MPGetCombatFrenzyIncrease();
 
 					// Check if Combat Frenzy should proc
-					if ((rand() % 100 + 1) > 95) {
-						// MPProcCombatFrenzy();
+					double chance = (rand() % 100 + 1);
+					if (chance > 95) {
+						 MPProcCombatFrenzy(other);
 					}
 
 				}

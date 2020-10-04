@@ -16,10 +16,8 @@ sub EVENT_SPAWN {
 }
 
 sub EVENT_KILLED_MERIT {
-	quest::ze(0,"EVENT KILLED MERIT TRIGGERED!");
 	# check if $client is on the nagafen kill task, if so award flags for kunark
 	if (quest::istaskactivityactive(290,1)) {
-		quest::ze(0,"isTaskActivityActive is true!");
 		quest::set_zone_flag(87);#1 burning woods
 		quest::set_zone_flag(103);#2 chardok
 		quest::set_zone_flag(90);#3 City of mist

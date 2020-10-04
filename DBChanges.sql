@@ -1,3 +1,8 @@
+-- Change some spells for damage ramping
+UPDATE spells_new SET buffdurationformula = 11, cast_time = 0, mana = 0, effect_base_value1 = 0, effectid1 = 254, classes3 = 255, ResistDiff = -500, spellgroup = 0 WHERE id IN (19711, 19712, 19713);
+
+SELECT * FROM spells_new WHERE id IN (19711, 19712, 19713, 19714, 19715);
+
 -- Everything is tradeable
 UPDATE items SET nodrop = 1 WHERE nodrop = 0;
 

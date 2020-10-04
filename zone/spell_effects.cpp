@@ -2409,6 +2409,17 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					//if(caster)
 					//	dmg = caster->GetActSpellDamage(spell_id, dmg);
 
+
+					// CUSTOM MP -- Add dmg for bard spells
+					if (caster->IsClient() || caster->IsBot()) {
+						double totalPctIncrease = MPCalcPctBonus(GetCHA());
+
+						totalPctIncrease += MPGetCombatFrenzyIncrease(this);
+						if (totalPctIncrease > 0) {
+							dmg += dmg * totalPctIncrease;
+						}
+					}
+					// END CUSTOM MP -- bard spell
 					dmg = -dmg;
 					Damage(caster, dmg, spell_id, spell.skill, false, buffslot, false);
 				} else if(dmg > 0) {
@@ -3584,6 +3595,18 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 					} else if (!caster->IsClient())
 						AddToHateList(caster, effect_value);
 				}
+				// CUSTOM MP -- Add dmg for bard spells
+				if (caster->IsClient() || caster->IsBot()) {
+					double totalPctIncrease = MPCalcPctBonus(GetCHA());
+					totalPctIncrease += MPGetCombatFrenzyIncrease(this);
+					if (totalPctIncrease > 0) {
+						LogCombat("Extra bard spell damage pct: [{}]", totalPctIncrease);
+						effect_value += effect_value * totalPctIncrease;
+					}
+
+				}
+				// END CUSTOM MP -- bard spell
+
 				Damage(caster, effect_value, buff.spellid, spell.skill, false, i, true);
 			} else if (effect_value > 0) {
 				// healing spell...

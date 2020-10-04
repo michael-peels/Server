@@ -4047,51 +4047,56 @@ void Corpse::CastRezz(uint16 spellid, Mob* Caster)
 }
 
 // Custom MP
-double Mob::MPGetCombatFrenzyIncrease() {
-	if (FindBuff(42603)) {
+double Mob::MPGetCombatFrenzyIncrease(Mob* other) {
+	if (other->FindBuff(19711)) {
 		return 0.1;
 	}
-	if (FindBuff(42604)) {
+	if (other->FindBuff(19712)) {
 		return 0.5;
 	}
-	if (FindBuff(42605)) {
+	if (other->FindBuff(19713)) {
 		return 1;
 	}
-	if (FindBuff(42606)) {
+	if (other->FindBuff(19714)) {
 		return 3;
 	}
-	if (FindBuff(42607)) {
+	if (other->FindBuff(19715)) {
 		return 5;
 	}
 	return 0.0;
 }
 
-void Mob::MPProcCombatFrenzy() {
-	if (FindBuff(42603)) {
-		BuffFadeBySpellID(42603);
-		CastSpell(42604, 0, CastingSlot::Item, 0);
+void Mob::MPProcCombatFrenzy(Mob* other) {
+	if (other->FindBuff(19715)) {
 		return;
-	}
-	if (FindBuff(42604)) {
-		BuffFadeBySpellID(42604);
-		CastSpell(42605, 0, CastingSlot::Item, 0);
+	} else if (other->FindBuff(19711)) {
+		CastSpell(19712, other->GetID(), CastingSlot::Item, 0);
+		if (other->FindBuff(19712)) {
+			other->BuffFadeBySpellID(19711);
+		}
 		return;
-	}
-	if (FindBuff(42605)) {
-		BuffFadeBySpellID(42605);
-		CastSpell(42606, 0, CastingSlot::Item, 0);
+	} else if (other->FindBuff(19712)) {
+		CastSpell(19713, other->GetID(), CastingSlot::Item, 0);
+		if (other->FindBuff(19713)) {
+			other->BuffFadeBySpellID(19712);
+		}
 		return;
-	}
-	if (FindBuff(42606)) {
-		BuffFadeBySpellID(42606);
-		CastSpell(42607, 0, CastingSlot::Item, 0);
+	} else 	if (other->FindBuff(19713)) {
+		CastSpell(19714, other->GetID(), CastingSlot::Item, 0);
+		if (other->FindBuff(19714)) {
+			other->BuffFadeBySpellID(19713);
+		}
 		return;
-	}
-	if (FindBuff(42607)) {
-		CastSpell(42607, 0, CastingSlot::Item, 0);
+	} else	if (other->FindBuff(19714)) {
+		CastSpell(19715, other->GetID(), CastingSlot::Item, 0);
+		if (other->FindBuff(19715)) {
+			other->BuffFadeBySpellID(19714);
+		}
 		return;
+	} else {
+		CastSpell(19711, other->GetID(), CastingSlot::Item, 0);
 	}
-	CastSpell(42603, 0, CastingSlot::Item, 0);
+	
 }
 // end Custom MP
 
